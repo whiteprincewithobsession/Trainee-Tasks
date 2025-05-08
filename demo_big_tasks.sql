@@ -73,3 +73,13 @@ SELECT passenger_id, passenger_name, total_amount,
 FROM consecutive_bookings
 WHERE r_amount = 1
 LIMIT 1;
+
+-- TASK 8
+
+SELECT DISTINCT (passenger_id, passenger_name) AS passenger_credits, scheduled_departure FROM tickets_extendent
+    WHERE age = 50 AND departure_airport = 'LED' AND arrival_airport = 'DME'
+        AND (scheduled_departure BETWEEN '2015-06-01' AND '2016-04-30');
+
+CREATE INDEX idx_tickets_extendent ON tickets_extendent (
+    age, departure_airport, arrival_airport, scheduled_departure
+);
