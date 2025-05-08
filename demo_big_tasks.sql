@@ -17,29 +17,18 @@ GROUP BY tickets.passenger_name;
 
 -- TASK 4
 -- выведите всех пассажиров которые НЕ бронировали билеты эконом класса в январе 2016 года
-SELECT t.passenger_name FROM tickets t
+
+SELECT DISTINCT t.passenger_name
+FROM tickets t
 WHERE NOT EXISTS (
     SELECT 1 FROM ticket_flights tf
-    JOIN flights ON tf.flight_id = flights.flight_id
-    JOIN seats ON flights.aircraft_code = seats.aircraft_code
-    WHERE  tf.ticket_no = t.ticket_no AND seats.fare_conditions = 'Economy' 
-        AND t.book_ref IN (
-          SELECT book_ref FROM bookings 
-          WHERE book_date >= '2016-01-01' AND book_date < '2016-02-01'
-      )
+    JOIN flights f ON tf.flight_id = f.flight_id
+    JOIN seats s ON f.aircraft_code = s.aircraft_code
+    JOIN bookings b ON t.book_ref = b.book_ref
+    WHERE tf.ticket_no = t.ticket_no AND f.status IN ('Arrived', 'Departed')
+      AND s.fare_conditions = 'Economy' AND b.book_date >= '2016-01-01' AND b.book_date < '2016-02-01'
 );
 
-SELECT DISTINCT t.passenger_id, t.passenger_name
-FROM bookings.tickets t
-LEFT JOIN (
-    SELECT tf.ticket_no
-    FROM bookings.ticket_flights tf
-    JOIN bookings.flights f ON tf.flight_id = f.flight_id
-    WHERE tf.fare_conditions = 'Economy'
-    AND f.scheduled_departure >= '2016-01-01' 
-    AND f.scheduled_departure < '2016-02-01'
-) eco_tickets ON t.ticket_no = eco_tickets.ticket_no
-WHERE eco_tickets.ticket_no IS NULL;
 
 -- TASK 5
 
