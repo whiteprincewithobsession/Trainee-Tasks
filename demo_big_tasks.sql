@@ -34,13 +34,13 @@ WHERE NOT EXISTS (
 -- Moscow
 
 SELECT COUNT(*) FILTER 
-    (WHERE arrival_airport IN 
+    (WHERE departure_airport IN 
         (SELECT airport_code FROM airports 
             WHERE city = 'Moscow'
         )
     ) AS moscow_flights,
     COUNT(*) FILTER 
-    (WHERE arrival_airport IN 
+    (WHERE departure_airport IN 
         (SELECT airport_code FROM airports 
             WHERE city = 'St. Petersburg'
         )
@@ -71,5 +71,5 @@ WITH consecutive_bookings AS (
 SELECT passenger_id, passenger_name, total_amount,
     (COALESCE(prev1, 0) + COALESCE(prev2, 0) + COALESCE(prev3, 0) + COALESCE(prev4, 0) + total_amount) as consecutive_sum
 FROM consecutive_bookings
-WHERE r_amount = 1;
-
+WHERE r_amount = 1
+LIMIT 1;
