@@ -61,13 +61,13 @@ WHERE status = 'Arrived';
 -- TASK 7
 
 WITH consecutive_bookings AS (
-    SELECT t.passenger_id, t.passenger_name,
+    SELECT t.passenger_name,
     b.book_ref, b.book_date, b.total_amount,
     SUM(b.total_amount) OVER (ORDER BY b.book_date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) as total_amount_5
     FROM tickets t
     JOIN bookings b ON t.book_ref = b.book_ref
 )
-SELECT passenger_id, passenger_name, total_amount, book_date, 
+SELECT passenger_name, total_amount, book_date, 
     total_amount_5 as consecutive_sum
 FROM consecutive_bookings
 ORDER BY consecutive_sum DESC
